@@ -123,6 +123,11 @@
       min-width: 3em;
       cursor: pointer;
     }
+
+    .navButton {
+      padding-top:10px;
+      padding-bottom:10px;
+    }
   </style>
   <script>
     /* --------------------------------------------------------------
@@ -475,7 +480,7 @@
      */
     function openNote() {
       let note = document.getElementById("pageNoteContainer");
-      note.style.width = "500px";  // this makes note visible
+      note.style.width = "600px";  // this makes note visible
       note.style.padding = "10px 15px 20px 15px";
       note.style.border = "2px solid saddlebrown";
     }
@@ -593,9 +598,23 @@
      */
     function initialize() {
       addKeys();
+      pageNoteScroll();
       //console.log('initialize() calling render(0):\ncurr = ', curr);
       render(0);
     }
+    /* --------------------------------------------------------------
+     *  Add wheel event listener to change width of page note.
+     */
+    function pageNoteScroll() {
+      var item = document.getElementById('pageNoteContainer');
+      window.addEventListener('wheel', function(e) {
+        if (e.deltaY > 0)
+          item.style.width = (parseInt(item.style.width) + 50) + 'px';
+        else
+          item.style.width = (parseInt(item.style.width) - 50) + 'px';
+      });
+     }
+
   </script>
   <style>
     #github .pageNotes {
@@ -611,6 +630,7 @@
       overflow-x: hidden;
       transition: 0.5s;
       font-size: medium;
+      -webkit-overflow-scrolling: touch;
     }
 
     #github .openNotebtn {
@@ -629,7 +649,7 @@
 
     #github #loadBtn {
       width: 8em;
-      height: 1.8em;
+      height: 1.75em;
     }
 
     #github #retrieveBtn {
@@ -666,8 +686,6 @@
           <span id="numItems"></span>
           pages
         </span>
-        <span-3em></span-3em>
-        <span id="pageAddress"></span>
       </span>
     </div>
 
@@ -676,18 +694,20 @@
 
     <!-- Define buttons and lables -->
     <div class="right">
-      <button id="nextBtn" class="right" onclick="next()">Next</button>
-      <button id="currBtn" class="right" onclick="returnToCurr()">Curr</button>
-      <button id="prevBtn" class="right" onclick="prev()">Prev</button>
-      <button id="firstBtn" class="right" onclick="first()">First</button>
-      <button id="lastBtn" class="right" onclick="last()">Last</button>
-      <button id="exitBtn" class="right" onclick="window.location = 'index.html'">Exit</button>
-      <button id="toggleBtn" class="right" onclick="openNote()">?</button>
+      <button id="nextBtn" class="right navButton" onclick="next()">Next</button>
+      <button id="prevBtn" class="right navButton" onclick="prev()">Prev</button>
+      <button id="currBtn" class="right navButton" onclick="returnToCurr()">Curr</button>
+      <button id="firstBtn" class="right navButton" onclick="first()">First</button>
+      <button id="lastBtn" class="right navButton" onclick="last()">Last</button>
+      <button id="exitBtn" class="right navButton" onclick="window.location = 'index.html'">Exit</button>
+      <button id="toggleBtn" class="right navButton" onclick="openNote()">?</button>
     </div>
 
     <!-- LoadStory button allows user to switch to a different story at any time -->
     <div class="footer">
       <button id="loadBtn" class="footer" onclick="loadStoryList()">Load Story List</button>
+      <span-3em></span-3em>
+      <button id="pageAddress" class="footer" style="background-color:white; border:none;"></button>
 
       <!-- This button is no longer needed, but may be used later for admin actions -->
       <!--<button id="retrieveBtn" class="footer" onclick="loadStory()">Load Story</button>-->
