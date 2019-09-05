@@ -151,10 +151,10 @@
      *  initialized
      */
     function isDefined(elem) {
-      if (typeof elem === 'undefined' || elem === null) {
+      if (typeof elem === 'undefined' || elem === null)
         return false;
-      }
-      return true;
+      else
+        return true;
     }
     /* --------------------------------------------------------------
      *  activeStyle(elem) - returns the current style, not what
@@ -358,7 +358,7 @@
      *    what was processed.
      */
     function retrieve(id) {
-      console.log('entering retrieve(id):\ncurr = ', curr);
+      //console.log('entering retrieve(id):\ncurr = ', curr);
 
       clearPages();
       if ('numItems' in localStorage) {
@@ -394,7 +394,7 @@
       loadTOC();
       //console.log('retrieve(id) calling render(1):\ncurr = ', curr);
       render(1);
-      //localStorage.clear();
+
       //console.log('leaving retrieve(id):\ncurr = ', curr);
     }
     /* ------------------------------------------------------------
@@ -493,102 +493,22 @@
       note.style.padding = "0px";
       note.style.border = "none";
     }
-    function isLocalFile() {
-      return window.location.protocol === "file:";
-    }
-
-    function isChrome() {
-      return false;
-      var isChromium = window.chrome;
-      var winNav = window.navigator;
-      var vendorName = winNav.vendor;
-      var isOpera = typeof window.opr !== "undefined";
-      var isIEedge = winNav.userAgent.indexOf("Edge") > -1;
-      var isIOSChrome = winNav.userAgent.match("CriOS");
-
-      if (isIOSChrome) {
-         // is Google Chrome on IOS
-        return true;
-      } else if(
-        isChromium !== null &&
-        typeof isChromium !== "undefined" &&
-        vendorName === "Google Inc." &&
-        isOpera === false &&
-        isIEedge === false
-      ) {
-         // is Google Chrome
-        return true;
-      } else { 
-         // not Google Chrome 
-        return false;
-      }
-    }
     /* --------------------------------------------------------------
      *  iframe onload event handler
      *  Checks to see if loadStory should be called
      *  so user doesn't have to do that.
      */
     function srcChange() {
-      if (isChrome())
+      let iframe = document.getElementById("slideShow");
+      if (!isDefined(iframe))
         return;
-      let storyName = document.getElementById("storyName");
-      if (!isDefined(storyName)) {
-        console.log('storyName not defined');
-        return;
-      }
-      if (!isDefined(localStorage)) {
-        console.log('local storage not defined');
-        return;
-      }
-      let name = localStorage.getItem('storySaved');
-      if (isDefined(name)) {
-        storyName.innerHTML = name + " : ";
-      }
-      if (isChrome()) {
-        console.log('is chrome');
-        return;
-      }
-      if (isLocalFile()) {
-        console.log('isLocalFile');
-        let signal = localStorage.getItem('storySaved');
-        console.log(signal);
-        console.log(localStorage.length);
-        if (isDefined(signal)) {
+      src = iframe.src;
+      if (isDefined(prevSrc)) {
+        if (prevSrc === src && numItems === 0) {
           loadStory();
-          localStorage.removeItem('storySaved');
         }
       }
-       
-      //src = iframe.src;
-      //if (isDefined(prevSrc)) {
-      //  if (prevSrc === src && numItems === 0) {
-      //    loadStory();
-      //  }
-      //}
-      //prevSrc = src;
-    }
-    function storageChange(event) {
-      console.log(event.key);
-      if (event.key !== 'storySaved')
-        return;
-      if (isLocalFile())
-        return;
-      console.log('storage event');
-      console.log('localStorage.length = ' + localStorage.length)
-      let signal = localStorage.getItem('storySaved');
-      //loadStory();
-      if (isDefined(signal)) {
-        loadStory();
-        //localStorage.removeItem('storySaved');
-      }
-      else {
-        console.log('signal undefined');
-      }
-    }
-
-    function addStorageEvent() {
-      //alert('addStorageEvent called');
-      window.addEventListener("storage", storageChange);
+      prevSrc = src;
     }
     /* --------------------------------------------------------------
      *  Loads story list by calling render(0)
@@ -678,9 +598,7 @@
      */
     function initialize() {
       addKeys();
-      addStorageEvent();
-      //localStorage.clear();
-      //pageNoteScroll();
+      pageNoteScroll();
       //console.log('initialize() calling render(0):\ncurr = ', curr);
       render(0);
     }
@@ -703,14 +621,13 @@
       width: 0px;
       position: fixed;
       z-index: 100;
-      max-height: 50%;
-      top: 100px;
-      right: 6.5em;
+      height: auto;
+      top: 200px;
+      right: 8.5em;
       background-color: white;
       color: #3c1414;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
       overflow-x: hidden;
-      overflow-y:auto;
       transition: 0.5s;
       font-size: medium;
       -webkit-overflow-scrolling: touch;
@@ -751,11 +668,12 @@
     }
   </style>
 </head>
-<body id="github" onload="initialize()">
-  <!-- this nav element needs to stay to avoid a JavaScript error when initializing -->
+<body id="github">
+ <!-- this nav element needs to stay to avoid a JavaScript error when initializing -->
   <nav>
     <div id="navbar"></div>
   </nav>
+
   <!-- Defines StoryTeller page layout -->
   <grid-container>
     <div class="header">
@@ -772,7 +690,7 @@
     </div>
 
     <!-- All content is loaded here -->
-    <iframe id="slideShow" class="main slideShow" src="" onload="srcChange()" style="width:99.5%; height:99%;"></iframe>
+    <iframe id="slideShow" class="main slideShow" src="" onload="srcChange()"></iframe>
 
     <!-- Define buttons and lables -->
     <div class="right">
@@ -788,8 +706,7 @@
     <!-- LoadStory button allows user to switch to a different story at any time -->
     <div class="footer">
       <button id="loadBtn" class="footer" onclick="loadStoryList()">Load Story List</button>
-      <span-2em></span-2em>
-      <button id="storyName" class="footer" style="background-color:white; border:none;"></button>
+      <span-3em></span-3em>
       <button id="pageAddress" class="footer" style="background-color:white; border:none;"></button>
 
       <!-- This button is no longer needed, but may be used later for admin actions -->
@@ -803,8 +720,8 @@
       <button id="closeButton" onclick="closeNote()">X</button>
     </div>
     <div>
-      Story Specific Page Notes<br />
-      --------------------------------
+      Page Notes<br />
+      ---------------
     </div>
     <div id="pageNoteId">
       Page notes are shown here.
@@ -822,7 +739,7 @@
     </ul>
   </div>
   <script>
-    //initialize();
+    initialize();
   </script>
 </body>
 </html>
