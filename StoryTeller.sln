@@ -12,10 +12,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		C.html = C.html
 		CppStory.html = CppStory.html
 		D.html = D.html
+		js\ScriptsStoryTeller.js = js\ScriptsStoryTeller.js
+		js\ScriptsStoryTOC.js = js\ScriptsStoryTOC.js
+		js\ScriptsUtilities.js = js\ScriptsUtilities.js
 		StoryList.html = StoryList.html
 		StoryTeller.html = StoryTeller.html
 		StoryTest.html = StoryTest.html
 		css\StylesSimpleDropDownMenu.css = css\StylesSimpleDropDownMenu.css
+		css\StylesStoryTeller.css = css\StylesStoryTeller.css
+		css\StylesStoryTOC.css = css\StylesStoryTOC.css
 		TestFileLoad.html = TestFileLoad.html
 	EndProjectSection
 EndProject
