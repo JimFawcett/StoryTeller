@@ -11,9 +11,12 @@
   <meta name="keywords" content="Repository, Design, Code" />
   <meta name="Author" content="Jim Fawcett" />
   <meta name="Author" content="James Fawcett" />
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <title>Intro</title>
+  <script src="js/ScriptsUtilities.js"></script>
+  <!--
   <script src="js/ScriptsTemplate_CppStory.js"></script>
+  -->
+  <script src="js/ScriptsTemplate.js"></script>
   <script src="js/ScriptsKeyboard_CppStory.js"></script>
   <script src="js/ScriptsMenu_CppStory.js"></script>
   <link rel="stylesheet" href="css/StylesTemplate_CppStory.css" />
@@ -22,18 +25,24 @@
     summary {
       padding: 3px 0px 5px 0px;
     }
+
+    .pad10 {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
   </style>
 </head>
 <body id="github" onload="initializeMenu()">
 
-  <navKeysContainer>
-    <navKey onclick="location.reload()">R</navKey>
-    <navKey onclick="scrollPageTop()">T</navKey>
-    <navKey onclick="scrollPageBottom()">B</navKey>
-    <navKey onclick="helpWin()">H</navKey>
-    <navKey onclick="loadPrev()">P</navKey>
-    <navKey onclick="loadNext()">N</navKey>
-  </navKeysContainer>
+  <navKeys-Container>
+    <nav-Key id="sKey" onclick="toggleSwipeEvents()">S</nav-Key>
+    <nav-Key id="rKey" onclick="location.reload()">R</nav-Key>
+    <nav-Key id="tKey" onclick="scrollPageTop()">T</nav-Key>
+    <nav-Key id="bKey" onclick="scrollPageBottom()">B</nav-Key>
+    <nav-Key id="hKey" onclick="helpWin()">H</nav-Key>
+    <nav-Key id="pKey" onclick="loadPrev()">P</nav-Key>
+    <nav-Key id="nKey" onclick="loadNext()">N</nav-Key>
+  </navKeys-Container>
 
   <nav>
     <div id="navbar"></div>
@@ -47,6 +56,42 @@
 
   <hr class="spread" />
   <indent-block>
+    <h3>Prologue:</h3>
+    C++ is a widely used, and in some ways elegant, programming language.  Its use is compelling
+    <details>
+      <summary>because:</summary>
+      <ul class="tight pad10">
+        <li>
+          It has excellent performance, due in part to the fact that it compiles to native machine code
+          rather than to byte code interpreted by a virtual machine.
+        </li>
+        <li>
+          C++ is very expressive.  Its operator syntax, use of aliases, and syntactic separation of
+          interface from implementation, allows a designer to express design intents very clearly.
+        </li>
+        <li>
+          The language supports class designs that allow users to be oblivious of the acquisition
+          and handling of resources.  Its standard libraries often make a lot of that almost automatic.
+        </li>
+        <li>
+          It provides direct control over the acquisition and release of resources, and those
+          actions are deterministic.  The designer has a lot of control over the release of resources
+          that are shared within a process, like file handles.
+        </li>
+        <li>
+          It is the only modern language that supports creating user-defined value behavior with
+          classes that may also participate in polymorphic class hierarchies.
+        </li>
+        <li>
+          C++ is still evolving to become more efficient, designer-friendly, and provide more artifacts that
+          support safe, reliable operation, like the standard smart pointers, move operations, and better
+          type deduction.  Its current standard is C++17 and the next, C++20, is moving toward completion.
+        </li>
+      </ul>
+    </details>
+    <spacer-15></spacer-15>
+    This story is intended to help you get started or refresh your knowledge of C++.
+
     <h3>Story Content:</h3>
     This is a <a href="../../Stories.html">story</a> about the C++ programming language.  It orders content
     from this site into a sequence of chapters about the C++ programming language. Each page of the story
@@ -66,26 +111,60 @@
     </ul>
     <h3>Story Navigation:</h3>
     <indent-block>
-      You can sequence through the story using &quot;N&quot; and &quot;P&quot; buttons on the right,
+      You can sequence through the story using &quot;Next&quot; and &quot;Prev&quot; buttons on the right,
       or use the &quot;TOC&quot; Table Of Contents links.
       <spacer-15></spacer-15>
       Story pages have navigation menus that allow you to navigate away from story content.
-      To return, simply use the &quot;R&quot; Return button.
+      To return, simply use the &quot;Curr&quot; button.  It points to the last visited (Current) story page.
       <spacer-15></spacer-15>
-      Any time you want to leave the story, simply use the &quot;E&quot; Exit button.
+      Any time you want to leave the story, simply use the &quot;Exit&quot; button.
+      <spacer-15></spacer-15>
+      If you need help, use the &quot;Help&quot; button. Get page specific commentary by clicking on the [?] button. 
+      <spacer-15></spacer-15>
+      If the StoryTeller is in focus (last button click outside page view) then you can also use navigation keys:
+      <ul class="tight pad10">
+        <li>
+          N => Next
+        </li>
+        <li>
+          P => Prev
+        </li>
+        <li>
+          C => Curr
+        </li>
+        <li>
+          H => Help
+        </li>
+        <li>
+          E => Exit
+        </li>
+      </ul>
     </indent-block>
-    <h3>Note:</h3>
+    <h3>Notes:</h3>
     <indent-block>
+      Using key events can be a bit confusing, especially the N and P key presses.  All the pages
+      in this story are connected and can be walked using these keys when the focus is on the StoryTeller.
+      <spacer-10></spacer-10>
+      However, some pages in the site, which may be included in the story, have their own model of a
+      next sequence.  For example, you can iterate through all the blogs using N and P key presses,
+      when the focus is in the page view area, e.g., the iframe. So there, instead of proceeding to
+      the next story page, you would move to the next blog.
+      <spacer-10></spacer-10>
+      This dual use of page sequencing can be quite useful, but it may take you a few attempts to get
+      comfortable with it.
+      <spacer-10></spacer-10>
       Links to other sites in the content view (an iframe) will fail to open due to a security violation.
       You can still view that content by opening in a new tab so it doesn&apos;t get loaded in
-      the iframe.  Simply press, and hold the link and select open in new tab.
+      the iframe.  Simply right-click or if you are using a touch screen, press and hold the link and
+      select open in new tab.
     </indent-block>
     <h3>Story ToDo:</h3>
     <ol class="tight">
-      <li>Add content in each of the chapter first pages - similar to this page.</li>
-      <li>Add exercise pages for each of the chapters.</li>
-      <li>Add a recommended books and links page at the end.</li>
+      <li>Add more content pages.</li>
+      <li>Add more exercises in the exercise pages for each chapter.</li>
       <li>Convert most of the pdf content to web pages.</li>
+      <li>Add section on template specialization in Chapter 4.</li>
+      <li>Discuss template metaprogramming, using CppProperty as an example</li>
     </ol>
   </indent-block>
   <spacer-25></spacer-25>

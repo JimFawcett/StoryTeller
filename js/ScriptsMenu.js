@@ -15,7 +15,7 @@ function initializeMenu() {
   var topMenu = document.getElementsByTagName("nav");
   topMenu[0].innerHTML = "<div class='navbar'>\
     <a href='index.html' class='menuItem'>Home</a>\
-    <a href='Repositories.html' class='menuItem darkItem' style='margin:0px;'>Repos</a>\
+    <a href='Repositories.html' class='menuItem'>Repos</a>\
     <div class='dropdown menuItem'>\
       <button class='dropbutton'>Notes &#9662;</button>\
       <div class='dropdown-content'>\
@@ -58,13 +58,23 @@ function initializeMenu() {
       <div class='dropdown-content'>\
         <div class='darkTheme'>&nbsp;Coding&nbsp;Resources&nbsp;</div>\
         <a href='https://en.cppreference.com/w/'>CppReference.com</a>\
+        <a href='https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md'>C++ Core Guidelines</a>\
+        <a href='CppSynopsis.html'>C++ Synopsis</a>\
+        <a href='DesignNote-Cpp11.html'>C++11 Survey</a>\
         <a href='https://cs.lmu.edu/~ray/notes/regex/'>Regular Expressions</a>\
         <a href='http://cpprocks.com/files/c++11-regex-cheatsheet.pdf'>C++11 regex</a>\
         <a href='https://github.com/joshnh/Git-Commands'>git commands</a>\
-        <a class='disable' href='UMLDiagrams.html'>UML Diagrams</a>\
         <a href='Resources/VisualStudioHelpSlides.pdf'>Visual Studio Help Slides</a>\
         <a href='SummerReading.html'>Summer Reading</a>\
-        <a href='CppExamples.html'>C++ Examples</a>\
+        <a href='WebNotes.html'>Web Notes</a>\
+        <a href='Tests.html'>UI Widget Tests</a>\
+        <a href='https://encycolorpedia.com/named'>Web Colors</a>\
+        <a href='UML.html'>UML Diagrams</a>\
+        <a href='Resources.html'>Presentations&nbsp;&amp;&nbsp;Diagrams&nbsp;&nbsp;</a>\
+        <a href='CppReferences.html'>C++ References</a>\
+        <a href='CppExamples.html'>C++ Example Code</a>\
+        <a href='Interviews.html'>Job Interviews</a>\
+        <div>&nbsp;</div>\
       </div>\
     </div>\
     <div class='dropdown menuItem'>\
@@ -100,7 +110,9 @@ function initializeMenu() {
       <div class='dropdown-content'>\
         <div class='darkTheme'>&nbsp;Ordered&nbsp;Content</div>\
         <a href='Stories.html'>What is a Story?</a>\
-        <a href='CppStory_SlideShow.html'>Starting C++</a>\
+        <a href='StoryTeller_LocalStorage.html'>Load Story List</a>\
+        <a href='StoryTellerDesign.html'>StoryTeller Design</a>\
+        <a class='disable' href='#'>C++ Ecosystem</a>\
         <a class='disable' href='#'>Site Story</a>\
         <a class='disable' href='#'>Repository&nbsp;Content</a>\
         <a class='disable' href='#'>Using&nbsp;Visual&nbsp;Studio</a>\
@@ -115,17 +127,20 @@ function initializeMenu() {
       <div class='dropdown-content'>\
         <div class='darkTheme'>&nbsp;About&nbsp;this&nbsp;Site</div>\
         <a href='JimFawcett.html'>Jim Fawcett</a>\
+        <a href='Friends.html'>Friends&nbsp;&amp&nbsp;Collaborators&nbsp;&nbsp;</a>\
         <a href='Help.html'>Help</a>\
         <a href='ToDo.html'>ToDo</a>\
-        <a href='#' onclick='toggleNavKeys()'>Toggle Nav Keys</a>\
+        <a href='#' onclick='togglenavKeys()'>Toggle Nav Keys</a>\
+        <a href='#' onclick='toggleSwipeEvents()'>Toggle Swipe Events</a>\
         <a href='SiteDesign.html'>Site Design</a>\
         <a href='BookDesignCourse.html'>Design Course</a>\
         <a class='border' href='index.html'>L1 Site Home</a>\
-        <a class='border' href='Repositories.html'>L2 Repository&nbsp;webpage</a>\
-        <a class='border' href='LangCpp.html'>L2 C++&nbsp;webpage</a>\
+        <a class='border' href='Repositories.html'>L2&nbsp;Repository&nbsp;webpage</a>\
+        <a class='border' href='LangCpp.html'>L2&nbsp;C++&nbsp;webpage</a>\
         <a href='https://github.com/JimFawcett'>Repositories&nbsp;code</a>\
         <a href='SiteMap.html'>Site Map</a>\
         <a href='Menus.html'>Menus</a>\
+        <a href='TestFileLoad.html'>TestFileLoad</a>\
       </div>\
     </div>\
     <button class='pageScroll' onclick='scrollPageTop()'>Top</button>\
@@ -141,19 +156,34 @@ function initializeMenu() {
   // otherwise load href from page link
 
   var nxt = document.getElementById("Next");
+  var nKey = document.getElementById("nKey");
+  var swKey = document.getElementById("sKey");
   if (nxt === null) {
     document.getElementById("nextLink").style.display = "none";  // button top right menu
+    if(isDefined(nKey))
+      nKey.style.display = "none";
+    if (isDefined(swKey))
+      swKey.style.display = "none";
   }
   else {
     document.getElementById("nextLink").href = nxt.href;
+    if (isDefined(nKey))
+      nKey.style.display = "inline";
+    if (isDefined(swKey))
+      swKey.style.display = "inline";
   }
 
   var prv = document.getElementById("Prev");
+  var pKey = document.getElementById("pKey");
   if (prv === null) {
     document.getElementById("prevLink").style.display = "none";  // button top right menu
+    if(isDefined(pKey))
+      pKey.style.display = "none";
   }
   else {
     document.getElementById("prevLink").href = prv.href;
+    if(isDefined(pKey))
+      pKey.style.display = "inline";
   }
 
   // show footer with copyright notice and revision date
@@ -165,7 +195,7 @@ function initializeMenu() {
 
   // set display mode for navKeys from value in local storage
 
-  setNavKeys();
+  setnavKeys();
   setImageSizer();
 
   // listen for keyboard events:
@@ -184,28 +214,54 @@ function initializeMenu() {
   for (var i = 0; i < elems.length; ++i) {
     elems[i].addEventListener("click", (event) => { toggleVisibility(event); }, false);
   }
+  let sKey = document.getElementById('sKey');
+  if (!isDefined(sKey))
+    return;
+  //  if (typeof getSwipeEvents === 'function') {
+  //  if (isDefined(getSwipeEvents))
+  //  
+  if (typeof getSwipeEvents === 'function') {
+    let test = getSwipeEvents();
+    if (test === 'true') {
+      addSwipeListeners();
+      sKey.innerHTML = 'S';
+    }
+    else {
+      sKey.innerHTML = '<del>S</del>';
+    }
+  }
 }
 
 //----< load page defined in current page's Prev link >--------------
 
 function loadPrev() {
-  document.getElementById("Prev").click();
+  try {
+    document.getElementById("Prev").click();
+  }
+  catch (err) {
+    console.log('exception: ' + err);
+  }
 }
 //----< load page defined in current page's Next link >--------------
 
 function loadNext() {
-  document.getElementById("Next").click();
+  try {
+    document.getElementById("Next").click();
+  }
+  catch (err) {
+    console.log('exception: ' + err);
+  }
 }
 //----< load page defined in current page's Lect link >--------------
 
-function loadLect() {
-  document.getElementById("Lect").click();  // Lect link is near top of first lect page
-}
-//----< load page defined in current page's Cour link >--------------
+//function loadLect() {
+//  document.getElementById("Lect").click();  // Lect link is near top of first lect page
+//}
+////----< load page defined in current page's Cour link >--------------
 
-function loadCour() {
-  document.getElementById("Cour").click();  // Cour link is near top of course page
-}
+//function loadCour() {
+//  document.getElementById("Cour").click();  // Cour link is near top of course page
+//}
 //----< hide, progressively, menu items on the left >----------------
 /*
 *  This let's user see menu items that overflow on the right
@@ -251,82 +307,107 @@ function scrollPageBottom() {
 }
 //----< toggle nav keys display >------------------------------------
 /*
-*  NavKeys are TBHNP keys at bottom right of each page
+*  navKeys are TBHNP keys at bottom right of each page
 */
-function toggleNavKeys() {
-  var nkc = document.getElementsByTagName("navKeysContainer");
-  var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
-  if (tog === "none") {
-    nkc[0].style.display = "inline";
-    window.localStorage.setItem("navKeyState", "show");  // persist change across pages
+function togglenavKeys() {
+  try {
+    var nkc = document.getElementsByTagName("navKeys-Container");
+    var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
+    if (tog === "none") {
+      nkc[0].style.display = "inline";
+      window.localStorage.setItem("navKeyState", "show");  // persist change across pages
+    }
+    else {
+      nkc[0].style.display = "none";
+      window.localStorage.setItem("navKeyState", "hide");  // persist chage across pages
+    }
   }
-  else {
-    nkc[0].style.display = "none";
-    window.localStorage.setItem("navKeyState", "hide");  // persist chage across pages
-  }
-}
-//----< setNavKeys display >-----------------------------------------
-
-function setNavKeys() {
-  var nkc = document.getElementsByTagName("navKeysContainer");
-  var navKeyState = window.localStorage.getItem("navKeyState");
-  if (navKeyState === null) {
-    nkc[0].style.display = "inline";
-    window.localStorage.setItem("navKeyState", "show");
+  catch (err) {
+    console.log('exception: ' + err);
     return;
   }
-  if (navKeyState === "show") {
-    nkc[0].style.display = "inline";
-  }
-  else {
-    nkc[0].style.display = "none";
-  }
+}
+//----< setnavKeys display >-----------------------------------------
 
+function setnavKeys() {
+  try {
+    var nkc = document.getElementsByTagName("navKeys-Container");
+    if (!isDefined(localStorage))
+      return;
+    var navKeyState = window.localStorage.getItem("navKeyState");
+    if (navKeyState === null) {
+      nkc[0].style.display = "inline";
+      window.localStorage.setItem("navKeyState", "show");
+      return;
+    }
+    if (navKeyState === "show") {
+      nkc[0].style.display = "inline";
+    }
+    else {
+      nkc[0].style.display = "none";
+    }
+  }
+  catch (err) {
+    console.log('exception: ' + err);
+    return;
+  }
 }
 //----< toggle image sizer display >-----------------------------------
 /*
 *  Image sizers appear to the right of some images
 */
 function toggleImageSizer() {
-  var nkc = document.getElementsByTagName("sizer-Container");
-  var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
-  for (let i = 0; i < nkc.length; ++i) {
-    if (tog === "none") {
-      nkc[i].style.display = "inline";
-      window.localStorage.setItem("imageSizerState", "show");  // persist change across pages
+  try {
+    var nkc = document.getElementsByTagName("sizer-Container");
+    var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
+    for (let i = 0; i < nkc.length; ++i) {
+      if (tog === "none") {
+        nkc[i].style.display = "inline";
+        window.localStorage.setItem("imageSizerState", "show");  // persist change across pages
+      }
+      else {
+        nkc[i].style.display = "none";
+        window.localStorage.setItem("imageSizerState", "hide");  // persist chage across pages
+      }
     }
-    else {
-      nkc[i].style.display = "none";
-      window.localStorage.setItem("imageSizerState", "hide");  // persist chage across pages
-    }
+  }
+  catch (err) {
+    console.log('exception: ' + err);
+    return;
   }
 }
 //----< set image sizer display >-----------------------------------------
 
 function setImageSizer() {
-  var nkc = document.getElementsByTagName("sizer-Container");
-  var imageSizerState = window.localStorage.getItem("imageSizerState");
+  try {
+    var nkc = document.getElementsByTagName("sizer-Container");
+    var imageSizerState = window.localStorage.getItem("imageSizerState");
 
-  for (let i = 0; i < nkc.length; ++i) {
-    if (imageSizerState === null) {
-      nkc[i].style.display = "inline";
-      window.localStorage.setItem("imageSizerState", "show");
-      return;
+    for (let i = 0; i < nkc.length; ++i) {
+      if (imageSizerState === null) {
+        nkc[i].style.display = "inline";
+        window.localStorage.setItem("imageSizerState", "show");
+        return;
+      }
+      if (imageSizerState === "hide") {
+        nkc[i].style.display = "none";
+      }
+      if (imageSizerState === "show") {
+        nkc[i].style.display = "inline";
+      }
+      else {
+        nkc[i].style.display = "none";
+      }
     }
-    if (imageSizerState === "hide") {
-      nkc[i].style.display = "none";
-    }
-    if (imageSizerState === "show") {
-      nkc[i].style.display = "inline";
-    }
-    else {
-      nkc[i].style.display = "none";
-    }
+  }
+  catch (err) {
+    console.log('exception: ' + err);
+    return;
   }
 }
 //----< toggle nav keys display >------------------------------------
 /*
-*   On right click, Toggle display of NavKeys TBHNP
+*   On right click, Toggle display of navKeys TBHNP
 *     unless target is anchor, then
 *   open link in new tab 
 */
@@ -337,8 +418,8 @@ function mouseAction(event) {
       window.open(event.target, "_newtab" + Math.floor(Math.random() * 999999));
     }
     else {
-      //toggleNavKeys();
-      toggleNavKeys();
+      //togglenavKeys();
+      togglenavKeys();
     }
   }
 }

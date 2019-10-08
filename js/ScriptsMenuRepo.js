@@ -72,6 +72,7 @@ function initializeMenu() {
       <div class='dropdown-content'>\
         <div class='darkTheme'>&nbsp;Projects</div>\
         <a href='SitePages.html'>SitePages</a>\
+        <a href='StoryTellerRepo.html'>StoryTeller</a>\
         <a href='CppParser.html'>CppParser</a>\
         <a href='CppCodeAnalyzer.html'>CppCodeAnalyzer</a>\
         <a href='CsDependencyAnalysis.html'>CsDependencyAnalysis</a>\
@@ -91,7 +92,7 @@ function initializeMenu() {
         <a href='STL-Containers.html'>STL-Containers</a>\
         <a href='IOStreams.html'>IOStreams</a>\
         <a href='CppThreads.html'>CppThreads</a>\
-        <a href='ProcAndThreads.html'>ProcsAndThreads</a>\
+        <a href='ProcsAndThreads.html'>ProcsAndThreads</a>\
         <a href='Interop.html'>Interop</a>\
         <a class='lightItem' href='CppExamples.html'>More&nbsp;Examples</a>\
       </div>\
@@ -108,14 +109,16 @@ function initializeMenu() {
       <button class='dropbutton'>About &#9662;</button>\
       <div class='dropdown-content'>\
         <a href='JimFawcett.html'>Jim Fawcett</a>\
+        <a href='Friends.html'>Friends&nbsp;&amp&nbsp;Collaborators&nbsp;&nbsp;</a>\
         <a href='Help.html'>Help</a>\
         <a href='ToDo.html'>ToDo</a>\
-        <a href='#' onclick='toggleNavKeys()'>Toggle Nav Keys</a>\
+        <a href='#' onclick='togglenavKeys()'>Toggle Nav Keys</a>\
+        <a href='#' onclick='toggleSwipeEvents()'>Toggle Swipe Events</a>\
         <a href='SiteDesign.html'>Site Design</a>\
         <a href='BookDesignCourse.html'>Design Course</a>\
         <a class='border' href='index.html'>L1 Site Home</a>\
-        <a class='border' href='Repositories.html'>L2 Repository&nbsp;webpage</a>\
-        <a class='border' href='LangCpp.html'>L2 C++&nbsp;webpage</a>\
+        <a class='border' href='Repositories.html'>L2&nbsp;Repository&nbsp;webpage</a>\
+        <a class='border' href='LangCpp.html'>L2&nbsp;C++&nbsp;webpage</a>\
         <a href='https://github.com/JimFawcett'>Repositories&nbsp;code</a>\
         <a href='SiteMap.html'>Site Map</a>\
         <a href='Menus.html'>Menus</a>\
@@ -134,19 +137,34 @@ function initializeMenu() {
   // otherwise load href from page link
 
   var nxt = document.getElementById("Next");
+  var nKey = document.getElementById("nKey");
+  var swKey = document.getElementById("sKey");
   if (nxt === null) {
     document.getElementById("nextLink").style.display = "none";  // button top right menu
+    if (isDefined(nKey))
+      nKey.style.display = "none";
+    if (isDefined(swKey))
+      swKey.style.display = "none";
   }
   else {
     document.getElementById("nextLink").href = nxt.href;
+    if (isDefined(nKey))
+      nKey.style.display = "inline";
+    if (isDefined(swKey))
+      swKey.style.display = "inline";
   }
 
   var prv = document.getElementById("Prev");
+  var pKey = document.getElementById("pKey");
   if (prv === null) {
     document.getElementById("prevLink").style.display = "none";  // button top right menu
+    if (isDefined(pKey))
+      pKey.style.display = "none";
   }
   else {
     document.getElementById("prevLink").href = prv.href;
+    if (isDefined(pKey))
+      pKey.style.display = "inline";
   }
 
   // show footer with copyright notice and revision date
@@ -158,7 +176,7 @@ function initializeMenu() {
 
   // set display mode for navKeys from value in local storage
 
-  setNavKeys();
+  setnavKeys();
   setImageSizer();
 
   // listen for keyboard events:
@@ -176,6 +194,15 @@ function initializeMenu() {
   var elems = document.getElementsByTagName("more-less");
   for (var i = 0; i < elems.length; ++i) {
     elems[i].addEventListener("click", (event) => { toggleVisibility(event); }, false);
+  }
+  let sKey = document.getElementById('sKey');
+  let test = getSwipeEvents();
+  if (test === 'true') {
+    addSwipeListeners();
+    sKey.innerHTML = 'S';
+  }
+  else {
+    sKey.innerHTML = '<del>S</del>';
   }
 }
 
@@ -227,7 +254,7 @@ function scrollMenuRight() {
   for (i = 0; i < items.length; ++i) {
     var cpprp = window.getComputedStyle(items[len - i - 1], null).getPropertyValue("display");
     if (cpprp !== "block") {
-      items[len-i-1].style.display = "block";
+      items[len - i - 1].style.display = "block";
       break;
     }
   }
@@ -244,35 +271,46 @@ function scrollPageBottom() {
 }
 //----< toggle nav keys display >------------------------------------
 /*
-*  NavKeys are TBHNP keys at bottom right of each page
+*  navKeys are TBHNP keys at bottom right of each page
 */
-function toggleNavKeys() {
-  var nkc = document.getElementsByTagName("navKeysContainer");
-  var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
-  if (tog === "none") {
-    nkc[0].style.display = "inline";
-    window.localStorage.setItem("navKeyState", "show");  // persist change across pages
+function togglenavKeys() {
+  try {
+    var nkc = document.getElementsByTagName("navKeys-Container");
+    var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
+    if (tog === "none") {
+      nkc[0].style.display = "inline";
+      window.localStorage.setItem("navKeyState", "show");  // persist change across pages
+    }
+    else {
+      nkc[0].style.display = "none";
+      window.localStorage.setItem("navKeyState", "hide");  // persist chage across pages
+    }
   }
-  else {
-    nkc[0].style.display = "none";
-    window.localStorage.setItem("navKeyState", "hide");  // persist chage across pages
-  }
-}
-//----< setNavKeys display >-----------------------------------------
-
-function setNavKeys() {
-  var nkc = document.getElementsByTagName("navKeysContainer");
-  var navKeyState = window.localStorage.getItem("navKeyState");
-  if (navKeyState === null) {
-    nkc[0].style.display = "inline";
-    window.localStorage.setItem("navKeyState", "show");
+  catch (err) {
     return;
   }
-  if (navKeyState === "show") {
-    nkc[0].style.display = "inline";
+}
+//----< setnavKeys display >-----------------------------------------
+
+function setnavKeys() {
+  try {
+    var nkc = document.getElementsByTagName("navKeys-Container");
+    var navKeyState = window.localStorage.getItem("navKeyState");
+    if (navKeyState === null) {
+      nkc[0].style.display = "inline";
+      window.localStorage.setItem("navKeyState", "show");
+      return;
+    }
+    if (navKeyState === "show") {
+      nkc[0].style.display = "inline";
+    }
+    else {
+      nkc[0].style.display = "none";
+    }
   }
-  else {
-    nkc[0].style.display = "none";
+  catch (err) {
+    console.log('exception: ' + err);
+    return;
   }
 }
 //----< toggle image sizer display >-----------------------------------
@@ -280,42 +318,57 @@ function setNavKeys() {
 *  Image sizers appear to the right of some images
 */
 function toggleImageSizer() {
-  var nkc = document.getElementsByTagName("sizer-Container");
-  var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
-  for (let i = 0; i < nkc.length; ++i) {
-    if (tog === "none") {
-      nkc[i].style.display = "inline";
-      window.localStorage.setItem("imageSizerState", "show");  // persist change across pages
+  try {
+    var nkc = document.getElementsByTagName("sizer-Container");
+    var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
+    for (let i = 0; i < nkc.length; ++i) {
+      if (tog === "none") {
+        nkc[i].style.display = "inline";
+        window.localStorage.setItem("imageSizerState", "show");  // persist change across pages
+      }
+      else {
+        nkc[i].style.display = "none";
+        window.localStorage.setItem("imageSizerState", "hide");  // persist chage across pages
+      }
     }
-    else {
-      nkc[i].style.display = "none";
-      window.localStorage.setItem("imageSizerState", "hide");  // persist chage across pages
-    }
+  }
+  catch (err) {
+    console.log('exception: ' + err);
+    return;
   }
 }
 //----< set image sizer display >-----------------------------------------
 
 function setImageSizer() {
-  var nkc = document.getElementsByTagName("sizer-Container");
-  var navKeyState = window.localStorage.getItem("imageSizerState");
+  try {
+    var nkc = document.getElementsByTagName("sizer-Container");
+    var imageSizerState = window.localStorage.getItem("imageSizerState");
 
-  for (let i = 0; i < nkc.length; ++i) {
-    if (navKeyState === null) {
-      nkc[i].style.display = "inline";
-      window.localStorage.setItem("imageSizerState", "show");
-      return;
+    for (let i = 0; i < nkc.length; ++i) {
+      if (imageSizerState === null) {
+        nkc[i].style.display = "inline";
+        window.localStorage.setItem("imageSizerState", "show");
+        return;
+      }
+      if (imageSizerState === "hide") {
+        nkc[i].style.display = "none";
+      }
+      if (imageSizerState === "show") {
+        nkc[i].style.display = "inline";
+      }
+      else {
+        nkc[i].style.display = "none";
+      }
     }
-    if (navKeyState === "show") {
-      nkc[i].style.display = "inline";
-    }
-    else {
-      nkc[i].style.display = "none";
-    }
+  }
+  catch (err) {
+    console.log('exception: ' + err);
+    return;
   }
 }
 //----< toggle nav keys display >------------------------------------
 /*
-*   On right click, Toggle display of NavKeys TBHNP
+*   On right click, Toggle display of navKeys TBHNP
 *     unless target is anchor, then
 *   open link in new tab 
 */
@@ -326,7 +379,8 @@ function mouseAction(event) {
       window.open(event.target, "_newtab" + Math.floor(Math.random() * 999999));
     }
     else {
-      toggleNavKeys();
+      //togglenavKeys();
+      togglenavKeys();
     }
   }
 }

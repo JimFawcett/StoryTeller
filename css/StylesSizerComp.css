@@ -11,10 +11,12 @@
   clear: both;
   float: right;
   padding: 15px; 
+  user-select:none;
   /*border:1px solid red;*/
 }
 
 #github .imgTitle {
+  font-size:0.85em;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;

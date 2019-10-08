@@ -19,14 +19,15 @@
  *  numItems is the number of links collected from the story TOC page,
  *  e.g., the number of pages in the story.
  */
-var storyName = "";   // name displayed in footer
-var pages = [];       // array to hold page objects
-var numItems = 0;     // number of story pages
-var curr = 1;         // current page index
-var src = null;       // holds iframe src url
-var prevSrc = null;   // used to detect no change in src on page load
-                      // needed to avoid user needing to explicitly load
-                      // story after selecting story link in story list
+var storyName = "";        // name displayed in footer
+//var storyLoaded = 'false'; // don't load more than once
+var pages = [];            // array to hold page objects
+var numItems = 0;          // number of story pages
+var curr = 1;              // current page index
+var src = null;            // holds iframe src url
+var prevSrc = null;        // used to detect no change in src on page load
+                           // needed to avoid user needing to explicitly load
+                           // story after selecting story link in story list
 
 /* --------------------------------------------------------------
  *  render(si) - si is story index
@@ -38,7 +39,7 @@ var prevSrc = null;   // used to detect no change in src on page load
  */
 function render(si) {
   curr = si;
-  //console.log('entering render:\ncurr = ', curr);
+  console.log('entering render:\ncurr = ', curr);
 
   // get locations to show current page and number of pages
   let index = document.getElementById("pageIndex");
@@ -54,7 +55,7 @@ function render(si) {
 
   switch (si) {
     case -1:  // Refreshing story teller loads blank page
-      slider.setAttribute("src", "blank.html")
+      slider.setAttribute("src", "blank.html");
       disableButtons();
       disableButton('retrieveBtn');
       disableButton('clrStorage');
@@ -71,19 +72,19 @@ function render(si) {
       break;
 
     case 0:  // load story list
-      clearLocalStorage();
       clearPages();
+      clearLocalStorage();
       slider.setAttribute("src", "StoryList.html");
       disableButtons();
       enableButton('retrieveBtn');
-      curr = 1;
+      //curr = 1;
       if (isDefined(pageField))
         pageField.style.display = "none";
       break;
 
     default: // render story pages
       if (si < -1 || numItems < si) {
-        //console.log('leaving render: bad si:\ncurr = ', curr);
+        console.log('leaving render: bad si:\ncurr = ', curr);
         return;
       }
       //enableButton('clrStorage');  // button hidden, will probably remove
@@ -93,8 +94,6 @@ function render(si) {
       // set note text for this page
       let noteElem = document.getElementById("pageNoteId");
       noteElem.innerHTML = pages[si - 1].note;
-
-      //console.log('pageField.tagname = ' + pageField.tagName);
 
       // show page index and number of pages
       if (isDefined(pageField)) {
@@ -109,14 +108,17 @@ function render(si) {
       addr.innerHTML = pages[si - 1].url;
   }
   // force iframe to change location
-  document.getElementById("slideShow").src = document.getElementById("slideShow").src;
+  //document.getElementById("slideShow").src = document.getElementById("slideShow").src;
 
-  //console.log('leaving render(curr):\ncurr = ', curr);
+  console.log('leaving render(curr):\ncurr = ', curr);
 }
 /* ------------------------------------------------------------
  *  Empty page information held in localStorage
  */
 function clearLocalStorage() {
+  console.log('clearing localStorage');
+  if (!isDefined(localStorage))
+    return;
   localStorage.clear();
 }
 /* --------------------------------------------------------------
@@ -139,7 +141,7 @@ function clearPages() {
  *    what was processed.
  */
 function retrieve(id) {
-  //console.log('entering retrieve(id):\ncurr = ', curr);
+  console.log('entering retrieve(id):\ncurr = ', curr);
 
   clearPages();
   if ('numItems' in localStorage) {
@@ -149,12 +151,13 @@ function retrieve(id) {
   else {
     alert('please select story');
 
-    //console.log('leaving retrieve(id) - no data in localStorage:\ncurr = ', curr);
+    console.log('leaving retrieve(id) - no data in localStorage:\ncurr = ', curr);
     return;
   }
 
   enableButtons();
   disableButton('retrieveBtn');
+  console.log('loading ' + numItems + ' items into pages');
 
   // push page objects into pages array
   for (var i = 0; i < numItems; ++i) {
@@ -175,7 +178,7 @@ function retrieve(id) {
   loadTOC();
   //console.log('retrieve(id) calling render(1):\ncurr = ', curr);
   render(1);  // display first page
-  //localStorage.clear();
+  //clearLocalStorage();
   //console.log('leaving retrieve(id):\ncurr = ', curr);
 }
 /* --------------------------------------------------------------
@@ -242,11 +245,15 @@ function openNote() {
     note.style.padding = "10px 15px 20px 15px";
     note.style.border = "2px solid saddlebrown";
     tBtn.innerHTML = "<del>&nbsp;?&nbsp;</del>";
+    //if(isEdge())
+    //  note.style.display = "block";
   }
   else {
     note.style.width = "0px";
     note.style.padding = "0px";
     note.style.border = "none";
+    //if(isEdge())
+    //  note.style.display = "none";
     tBtn.innerHTML = "?";
   }
 }
@@ -255,9 +262,19 @@ function openNote() {
  */
 function closeNote() {
   let note = document.getElementById("pageNoteContainer");
+  let tBtn = document.getElementById("toggleBtn");
+  tBtn.innerHTML = '?';
   note.style.width = "0px";
   note.style.padding = "0px";
   note.style.border = "none";
+  //if(isEdge())
+  //  note.style.display = "none";
+}
+/* --------------------------------------------------------------
+ *  Open help window
+ */
+function openHelp() {
+  window.open('StHelp.html', 'target=_blank', 'location=yes, width=1000, height=650, resizable');
 }
 /*
  *  Was this file loaded from file system instead of web server?
@@ -273,6 +290,8 @@ function isLocalFile() {
  *  test.
  */
 function isChrome() {
+  //if (isEdge())
+  //  return false;
   var isChromium = window.chrome;
   var winNav = window.navigator;
   var vendorName = winNav.vendor;
@@ -297,6 +316,21 @@ function isChrome() {
     return false;
   }
 }
+
+function isEdge() {
+  if (/Edge/.test(navigator.userAgent))
+    return true;
+  return false;
+  //var uA = window.navigator.userAgent,
+  //  isIE = /msie\s|trident\/|edge\//i.test(uA) && !!(document.uniqueID || document.documentMode || window.ActiveXObject || window.MSInputMethodContext),
+  //  checkVersion = (isIE && +(/(edge\/|rv:|msie\s)([\d.]+)/i.exec(uA)[2])) || NaN;
+  //if (checkVersion)
+  //  return true;
+  //return false;
+  //if (document.documentMode || /Edge/.test(navigator.userAgent))
+  //  return true;
+  //return false;
+}
 /* --------------------------------------------------------------
  *  iframe onload event handler
  *  - Checks to see if loadStory should be called so user
@@ -305,13 +339,24 @@ function isChrome() {
  *    change events when using file: protocol.
  */
 function srcChange() {
-  //if (isChrome())
-  //  return;
-  if (!isDefined(localStorage)) {
-    // Edge doesn't define localStorage when protocal is file:
-    //console.log('local storage not defined');  
+  console.log('entered srcChange');
+  if (!isLocalFile()) {
+    console.log('leaving srcChange - not local file');
     return;
   }
+  if (isChrome()) {
+    console.log('leaving srcChange - isChrome');
+    return;
+  }
+
+  let signal = localStorage.getItem('storySaved');
+  console.log('signal = ' + signal);
+  console.log(localStorage.length);
+  if (!isDefined(signal)) {
+    console.log('story not saved - returning');
+    return;
+  }
+
   let storyNamePlace = document.getElementById("storyNameId");
   if (isDefined(storyNamePlace)) {
     let name = localStorage.getItem('storySaved');
@@ -320,20 +365,17 @@ function srcChange() {
       storyName = name;
     }
   }
-  if (isChrome()) {
-    //console.log('is chrome');
-    return;
+
+  showStorage();
+  signal = localStorage.getItem('storySaved');
+  console.log('signal = ' + signal);
+  console.log(localStorage.length);
+  if (isDefined(signal)) {
+    loadStory();
+    console.log('---------- removing storySaved item -----------------');
+    localStorage.removeItem('storySaved');  // prevent infinite recursion
   }
-  if (isLocalFile()) {
-    //console.log('isLocalFile');
-    let signal = localStorage.getItem('storySaved');
-    //console.log(signal);
-    //console.log(localStorage.length);
-    if (isDefined(signal)) {
-      loadStory();
-      localStorage.removeItem('storySaved');  // prevent infinite recursion
-    }
-  }
+  console.log('leaving srcChange at end');
 }
 /* --------------------------------------------------------------
  *  localStorage changed event handler
@@ -341,33 +383,56 @@ function srcChange() {
  *    doesn't have to do that with a load button.
  */
 function storageChange(event) {
-  //console.log(event.key);
-  if (event.key !== 'storySaved')
+  var storyName;
+  console.log('entered storageChange with event.key = ' + event.key);
+  showStorage();
+
+  //if (event.key !== 'numItems') {
+  //  return;
+  //}
+  if (event.key !== 'storySaved') {
     return;
-  //console.log('storage event');
-  //console.log('localStorage.length = ' + localStorage.length)
-  let signal = localStorage.getItem('storySaved');
-  storyName = signal;
-  //alert(storyName);
-  if (isDefined(signal)) {
+  }
+  else {
+    storyName = localStorage.getItem('storySaved');
+    //storyName = event.newValue;
+    console.log('event.key = ' + event.key + ' : ' + 'event.newValue = ' + event.NewValue);
+  }
+
+  console.log('localStorage.length = ' + localStorage.length);
+  showStorage();
+
+  let numItemsStr = localStorage.getItem('numItems');
+  numItems = parseInt(numItemsStr);
+  console.log('numItems = ' + numItems);
+  if (numItems > 0) {
+    //-----------------------------------------------------
+    // storyName is undefined unless these are uncommented
+    let signal = localStorage.getItem('storySaved');
+    storyName = signal;
+    console.log('storyName = ' + storyName);
     let storyNamePlace = document.getElementById("storyNameId");
     storyNamePlace.innerHTML = storyName;
     loadStory();
+    console.log('---------- removing storySaved item -----------------');
     localStorage.removeItem('storySaved');  // added 9/6/2019
   }
   else {
-    //console.log('signal undefined');
+    console.log('numItems === 0');
   }
 }
 
 function addStorageEvent() {
   //alert('addStorageEvent called');
-  window.addEventListener("storage", storageChange, false);
+  window.addEventListener("storage", function (e) { storageChange(e); }, false);
 }
+
 /* --------------------------------------------------------------
  *  Loads story list by calling render(0)
  */
 function loadStoryList() {
+  console.log('entering loadStoryList()');
+  clearLocalStorage();
   closeNote();
   //console.log('LoadStoryList() calling render(0):\ncurr = ', curr);
   render(0);
@@ -378,9 +443,15 @@ function loadStoryList() {
  *  'numItems' is id of element that holds and displays page count
  */
 function loadStory() {
+  let storyKey = localStorage.getItem('storySaved');
+  if (!isDefined(storyKey)) {
+    console.log('story already loaded - leaving loadStory()');
+    return;
+  }
   closeNote();
-  //console.log('loadStory calling retrieve("numItems"):\ncurr = ', curr);
+  console.log('loadStory calling retrieve("numItems"):\ncurr = ', curr);
   retrieve('numItems');
+  localStorage.removeItem('storySaved');
 }
 /* --------------------------------------------------------------
  *  Loads Table of Contents by indexing through pages array
@@ -454,11 +525,11 @@ function disableButtons() {
 function keyAction(keyEvent) {
   keystate = 'down';
   var key = String.fromCharCode(keyEvent.which);
-  if (key === 'R') {
-    location.reload();
-  }
+  //if (key === 'R') {
+  //  location.reload();
+  //}
   if (key === 'C') {
-    returnToCurrent();
+    returnToCurr();
   }
   if (key === 'N') {
     next();
@@ -470,10 +541,14 @@ function keyAction(keyEvent) {
     window.location = 'index.html';
   }
   if (key === 'H') {
+    openHelp();
+  }
+  if (key === 'O') {
     openNote();
   }
-  if (keyEvent.key === 'Escape')
-    closeNote();
+  if (key === 'S') {
+    toggleStSwipeEvents();
+  }
 }
 /* --------------------------------------------------------------
  *  Add event listener for key events
@@ -490,6 +565,7 @@ function addKeys() {
  */
 function initialize() {
   addKeys();
+  console.log('adding storage event listener');
   addStorageEvent();
   //localStorage.clear();
   //console.log('initialize() calling render(0):\ncurr = ', curr);

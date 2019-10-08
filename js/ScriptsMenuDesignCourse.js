@@ -19,6 +19,7 @@ function initializeMenu() {
     <div class='dropdown menuItem'>\
       <button class='dropbutton'>Notes &#9662;</button>\
       <div class='dropdown-content'>\
+        <div class='darkTheme'>&nbsp;Developing&nbsp;Code</div>\
         <a href='DesignProcess.html'>Design Process</a>\
         <a href='ProjectsList.html'>Project suggestions</a>\
       </div>\
@@ -26,6 +27,7 @@ function initializeMenu() {
     <div class='dropdown menuItem'>\
       <button class='dropbutton'>Blogs &#9662;</button>\
       <div class='dropdown-content'>\
+        <div class='darkTheme'>&nbsp;Opinions&nbsp;and&nbsp;Ideas</div>\
         <a href='Blog.html'>First&nbsp;Things</a>\
         <div style='padding:0px 10px; margin:0px; font-size:small;'>--&nbsp;Design&nbsp;--------------&nbsp;</div>\
         <a href='BlogDesign.html'>SW&nbsp;Design</a>\
@@ -54,18 +56,25 @@ function initializeMenu() {
     <div class='dropdown menuItem'>\
       <button class='dropbutton'>Resources &#9662;</button>\
       <div class='dropdown-content'>\
+        <div class='darkTheme'>&nbsp;Coding&nbsp;Resources</div>\
         <a href='https://en.cppreference.com/w/'>CppReference.com</a>\
         <a href='https://cs.lmu.edu/~ray/notes/regex/'>Regular Expressions</a>\
         <a href='http://cpprocks.com/files/c++11-regex-cheatsheet.pdf'>C++11 regex</a>\
         <a href='https://github.com/joshnh/Git-Commands'>git commands</a>\
-        <a class='disable' href='UMLDiagrams.html'>UML Diagrams</a>\
+        <a href='UML.html'>UML Diagrams</a>\
         <a href='Resources/VisualStudioHelpSlides.pdf'>Visual Studio Help Slides</a>\
         <a href='SummerReading.html'>Summer Reading</a>\
+        <a href='Resources.html'>Presentations&nbsp;&amp;&nbsp;Diagrams</a>\
+        <a href='WebNotes.html'>Web Notes</a>\
+        <a href='https://encycolorpedia.com/named'>Web Colors</a>\
+        <a href='CppReferences.html'>C++ References</a>\
+        <a href='CppExamples.html'>C++ Examples</a>\
       </div>\
     </div>\
     <div class='dropdown menuItem'>\
       <button class='dropbutton'>Prog Lang &#9662;</button>\
       <div class='dropdown-content'>\
+        <div class='darkTheme'>&nbsp;Programming&nbsp;Languages&nbsp;</div>\
         <a href='LangCpp.html'>C++</a>\
         <a class='disable' href='#'>C#</a>\
         <a class='disable' href='#'>HTML</a>\
@@ -80,6 +89,7 @@ function initializeMenu() {
     <div class='dropdown menuItem'>\
       <button class='dropbutton'>Design Book &#9662;</button>\
       <div class='dropdown-content'>\
+        <div class='darkTheme'>&nbsp;Book&nbsp;Contents&nbsp;</div>\
         <a class='disable' href='#'>Table of Contents</a>\
         <a class='disable' href='#'>Concept&nbsp;and&nbsp;Tasks&nbsp;(TextFinder)</a>\
         <a class='disable' href='#'>Classes (CppUtilities)</a>\
@@ -100,15 +110,17 @@ function initializeMenu() {
     <div class='dropdown menuItem'>\
       <button class='dropbutton'>About &#9662;</button>\
       <div class='dropdown-content'>\
+        <div class='darkTheme'>&nbsp;About&nbsp;this&nbsp;Site</div>\
         <a href='JimFawcett.html'>Jim Fawcett</a>\
         <a href='Help.html'>Help</a>\
         <a href='ToDo.html'>ToDo</a>\
-        <a href='#' onclick='toggleNavKeys()'>Toggle Nav Keys</a>\
+        <a href='#' onclick='togglenavKeys()'>Toggle Nav Keys</a>\
+        <a href='#' onclick='toggleSwipeEvents()'>Toggle Swipe Events</a>\
         <a href='SiteDesign.html'>Site Design</a>\
         <a href='BookDesignCourse.html'>Design Course</a>\
         <a class='border' href='index.html'>L1 Site Home</a>\
-        <a class='border' href='Repositories.html'>L2 Repository&nbsp;webpage</a>\
-        <a class='border' href='LangCpp.html'>L2 C++&nbsp;webpage</a>\
+        <a class='border' href='Repositories.html'>L2&nbsp;Repository&nbsp;webpage</a>\
+        <a class='border' href='LangCpp.html'>L2&nbsp;C++&nbsp;webpage</a>\
         <a href='https://github.com/JimFawcett'>Repositories&nbsp;code</a>\
         <a href='SiteMap.html'>Site Map</a>\
         <a href='Menus.html'>Menus</a>\
@@ -151,7 +163,7 @@ function initializeMenu() {
 
   // set display mode for navKeys from value in local storage
 
-  setNavKeys();
+  setnavKeys();
   setImageSizer();
 
   // listen for keyboard events:
@@ -237,10 +249,10 @@ function scrollPageBottom() {
 }
 //----< toggle nav keys display >------------------------------------
 /*
-*  NavKeys are TBHNP keys at bottom right of each page
+*  navKeys are TBHNP keys at bottom right of each page
 */
-function toggleNavKeys() {
-  var nkc = document.getElementsByTagName("navKeysContainer");
+function togglenavKeys() {
+  var nkc = document.getElementsByTagName("navKeys-Container");
   var tog = window.getComputedStyle(nkc[0], null).getPropertyValue("display");
   if (tog === "none") {
     nkc[0].style.display = "inline";
@@ -251,10 +263,10 @@ function toggleNavKeys() {
     window.localStorage.setItem("navKeyState", "hide");  // persist chage across pages
   }
 }
-//----< setNavKeys display >-----------------------------------------
+//----< setnavKeys display >-----------------------------------------
 
-function setNavKeys() {
-  var nkc = document.getElementsByTagName("navKeysContainer");
+function setnavKeys() {
+  var nkc = document.getElementsByTagName("navKeys-Container");
   var navKeyState = window.localStorage.getItem("navKeyState");
   if (navKeyState === null) {
     nkc[0].style.display = "inline";
@@ -308,7 +320,7 @@ function setImageSizer() {
 }
 //----< toggle nav keys display >------------------------------------
 /*
-*   On right click, Toggle display of NavKeys TBHNP
+*   On right click, Toggle display of navKeys TBHNP
 *     unless target is anchor, then
 *   open link in new tab 
 */
@@ -319,8 +331,8 @@ function mouseAction(event) {
       window.open(event.target, "_newtab" + Math.floor(Math.random() * 999999));
     }
     else {
-      //toggleNavKeys();
-      toggleNavKeys();
+      //togglenavKeys();
+      togglenavKeys();
     }
   }
 }

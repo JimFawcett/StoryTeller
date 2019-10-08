@@ -1,0 +1,10 @@
+ A-ToDo.txt
+=====================================================================
+1. Change layout using grid container
+   - devote more space to content
+   - move navigation buttons to right sidebar
+2. Add Table Of Contents dropdown menu
+3. change page-notes per w3schools slide out
+3. Add second story for demonstrations
+4. Use iframe load event to handle enabling Load Story button
+4. Move to github site

@@ -11,9 +11,12 @@
   <meta name="keywords" content="Repository, Design, Code" />
   <meta name="Author" content="Jim Fawcett" />
   <meta name="Author" content="James Fawcett" />
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <title>Exercises-2</title>
+  <script src="js/ScriptsUtilities.js"></script>
+  <!--
   <script src="js/ScriptsTemplate_CppStory.js"></script>
+  -->
+  <script src="js/ScriptsTemplate.js"></script>
   <script src="js/ScriptsKeyboard_CppStory.js"></script>
   <script src="js/ScriptsMenu_CppStory.js"></script>
   <link rel="stylesheet" href="css/StylesTemplate_CppStory.css" />
@@ -26,14 +29,15 @@
 </head>
 <body id="github" onload="initializeMenu()">
 
-  <navKeysContainer>
-    <navKey onclick="location.reload()">R</navKey>
-    <navKey onclick="scrollPageTop()">T</navKey>
-    <navKey onclick="scrollPageBottom()">B</navKey>
-    <navKey onclick="helpWin()">H</navKey>
-    <navKey onclick="loadPrev()">P</navKey>
-    <navKey onclick="loadNext()">N</navKey>
-  </navKeysContainer>
+  <navKeys-Container>
+    <nav-Key id="sKey" onclick="toggleSwipeEvents()">S</nav-Key>
+    <nav-Key id="rKey" onclick="location.reload()">R</nav-Key>
+    <nav-Key id="tKey" onclick="scrollPageTop()">T</nav-Key>
+    <nav-Key id="bKey" onclick="scrollPageBottom()">B</nav-Key>
+    <nav-Key id="hKey" onclick="helpWin()">H</nav-Key>
+    <nav-Key id="pKey" onclick="loadPrev()">P</nav-Key>
+    <nav-Key id="nKey" onclick="loadNext()">N</nav-Key>
+  </navKeys-Container>
 
   <nav>
     <div id="navbar"></div>
@@ -53,7 +57,7 @@
     <div style="width:80%">
       <ol>
         <li>
-          Write a class that has a single implemented method, 
+          Write a class that has a single implemented method,
           <code-span>void title(const std::string&amp; msg)</code-span>.
           The method should format the title, as in Exercises-1:7.
           <hr />
@@ -64,8 +68,8 @@
           Should you implement the compiler generated methods?
         </li>
         <li>
-          For the class you created in the first exercise, add a method called 
-          <code-span>add(const std::string&amp; text)</code-span> that 
+          For the class you created in the first exercise, add a method called
+          <code-span>add(const std::string&amp; text)</code-span> that
           accepts a std::string and appends it to a private std::string member.  Also, add a method
           to return the std::string member by value.
           <hr />
@@ -74,7 +78,7 @@
           chain calls, e.g., <code-span>x.add(":&nbsp;one").add(",&nbsp;two")</code-span>.
         </li>
         <li>
-          Build a class with method <code-span>bool top(const std::string&amp; fileSpec, size_t n)</code-span>.  
+          Build a class with method <code-span>bool top(const std::string&amp; fileSpec, size_t n)</code-span>.
           Attempt to open the file, and if that succeeds, display the first N lines.
           <hr />
           Please handle file opening errors in some meaningful way.
@@ -85,7 +89,20 @@
           move construction, copy assignment, move assignment, and destructor methods for this class.
           <hr />
           You may assume that <code-span>Widget</code-span> instances have correct copy, move, and destruction
-          semantics.
+          semantics.  You don&apos;t need to provide any specific functionality for Widgets.  Consider using
+          annunciating constructors to show that WidgeUser is properly managing its Widget.
+        </li>
+        <li>
+          Write code for a class that composes a fundamental type and an STL container (if doesn&apos;t really matter which).
+          Show, by careful testing, that the class can correctly allow the compiler to generate its default and copy
+          constructors, assignment operator, and destructor. Now replace the composition with aggregation where the fundamental
+          and STL container types are referenced by pointers to the native heap. Show that incorrect operations occur
+          if you don&apos;t provide the copy, assignment, and destruction operations.  Now add those operations and
+          show that class operations are valid again.  Finally, prevent the compiler from generating those methods
+          using =delete. Note that you will have to provide a destructor (why is that?).
+          <hr />
+          Doing this exercise carefully is the best way I know of for you to learn how to handle compiler generated
+          methods.
         </li>
       </ol>
     </div>
